@@ -21,7 +21,7 @@ export default async function DashboardLayout({
   // Récupérer les infos du business
   const { data: business } = (await supabase
     .from("businesses")
-    .select("name")
+    .select("name, plan")
     .eq("user_id", user.id)
     .single()) as { data: any };
 
@@ -32,7 +32,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* Sidebar desktop */}
-      <Sidebar businessName={businessName} userName={userName} userAvatar={userAvatar} />
+      <Sidebar businessName={businessName} userName={userName} userAvatar={userAvatar} plan={business?.plan || "free"} />
 
       {/* Contenu principal */}
       <main className="dashboard-content flex-1">

@@ -24,6 +24,10 @@ export default async function DashboardPage() {
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+
   // Récupérer les données en parallèle
   const [salesResult, expensesResult, debtsResult, productsResult, businessResult] =
     await Promise.all([
@@ -66,10 +70,27 @@ export default async function DashboardPage() {
       // Business info
       supabase
         .from("businesses")
-        .select("name")
+        .select("name, plan")
         .eq("user_id", user.id)
         .single(),
     ]);
+
+  // Opérations du mois (ventes + dépenses)
+  const { count: monthSalesCount } = await supabase
+    .from("sales")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("sold_at", monthStart.toISOString());
+
+  const { count: monthExpensesCount } = await supabase
+    .from("expenses")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("spent_at", monthStart.toISOString());
+
+  const monthOperationsCount = (monthSalesCount || 0) + (monthExpensesCount || 0);
+  const plan = businessResult.data?.plan || "free";
+  const operationsLimit = plan === "free" ? 30 : 999999;
 
   // Ventes des 7 derniers jours pour le graphique
   const { data: weekSales } = await supabase
@@ -137,7 +158,11 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       userName={userName}
+      userAvatar={user.user_metadata?.avatar_url || ""}
       businessName={businessResult.data?.name || "Mon Commerce"}
+      plan={plan}
+      operationsUsed={monthOperationsCount}
+      operationsLimit={operationsLimit}
       todaySales={todaySales}
       todayExpenses={todayExpenses}
       todayProfit={todayProfit}
