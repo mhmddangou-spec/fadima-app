@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -232,15 +232,17 @@ export default function ProductsClient({ products, categories, userId }: Product
 
       {/* Modal — Nouveau produit */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowForm(false)}>
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up overflow-y-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-5 border-b border-gray-100 sticky top-0 bg-white">
-              <h2 className="text-lg font-bold text-gray-900">Nouveau produit</h2>
-              <button onClick={() => setShowForm(false)} className="p-2 hover:bg-gray-100 rounded-xl">
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4 sm:p-6 overflow-y-auto" onClick={() => setShowForm(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up flex flex-col max-h-[90vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-5 border-b border-gray-100 flex-shrink-0">
+              <h2 className="text-lg font-bold text-gray-900">
+                Nouveau produit
+              </h2>
+              <button onClick={() => setShowForm(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <form onSubmit={handleSubmit} className="p-5 space-y-4 overflow-y-auto">
               <div>
                 <label className="input-label">Nom du produit *</label>
                 <input type="text" className="input" placeholder="Ex: Chaussures mocassins" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />

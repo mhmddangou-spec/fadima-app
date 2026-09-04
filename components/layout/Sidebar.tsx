@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard, ShoppingBag, CreditCard, Users, Package,
   BarChart3, MessageSquare, Settings, TrendingUp, LogOut,
-  ChevronRight, AlertCircle, Zap, Bell, Building2
+  ChevronRight, AlertCircle, Zap, Bell, Building2, Search
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/format";
+import GlobalSearchModal from "../search/GlobalSearchModal";
+import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard" },
@@ -27,11 +29,13 @@ interface SidebarProps {
   userName?: string;
   userAvatar?: string;
   plan?: string;
+  userId: string;
 }
 
-export default function Sidebar({ businessName, userName, userAvatar, plan = "free" }: SidebarProps) {
+export default function Sidebar({ businessName, userName, userAvatar, plan = "free", userId }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -85,6 +89,17 @@ export default function Sidebar({ businessName, userName, userAvatar, plan = "fr
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <button
+          onClick={() => setIsSearchOpen(true)}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
+        >
+          <Search className="w-4.5 h-4.5 flex-shrink-0 group-hover:scale-110 transition-transform duration-200" style={{ width: "1.125rem", height: "1.125rem" }} />
+          <span className="flex-1 text-left">Recherche globale</span>
+          <div className="hidden lg:flex items-center gap-1 opacity-50">
+            <kbd className="bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-[10px] font-sans">Esc</kbd>
+          </div>
+        </button>
+
         {navItems.map((item) => {
           const isAct = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
@@ -158,6 +173,8 @@ export default function Sidebar({ businessName, userName, userAvatar, plan = "fr
           Deconnexion
         </button>
       </div>
+
+      <GlobalSearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} userId={userId} />
     </aside>
   );
 }

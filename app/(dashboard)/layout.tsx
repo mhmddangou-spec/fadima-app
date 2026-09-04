@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
+import SyncIndicator from "@/components/layout/SyncIndicator";
 
 export default async function DashboardLayout({
   children,
@@ -32,15 +33,16 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       {/* Sidebar desktop */}
-      <Sidebar businessName={businessName} userName={userName} userAvatar={userAvatar} plan={business?.plan || "free"} />
+      <Sidebar businessName={businessName} userName={userName} userAvatar={userAvatar} plan={business?.plan || "free"} userId={user.id} />
 
       {/* Contenu principal */}
-      <main className="dashboard-content flex-1">
-        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+      <main className="dashboard-content flex-1 min-w-0">
+        <div className="p-4 sm:p-6 lg:p-8 overflow-hidden">{children}</div>
       </main>
 
       {/* Navigation mobile */}
       <BottomNav />
+      <SyncIndicator />
 
       {/* Toast notifications */}
       <Toaster

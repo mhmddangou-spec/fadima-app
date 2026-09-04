@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { formatCFA, formatDateShort, formatRelative, formatPaymentMethod, getStatusColor, formatPaymentStatus } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/format";
+import { exportToPDF, exportToExcel } from "@/lib/export";
+import { Download } from "lucide-react";
 
 interface SaleItem {
   product_name: string;
@@ -53,6 +55,45 @@ export default function SalesClient({ sales }: SalesClientProps) {
     return matchSearch && matchFilter;
   });
 
+  const handleExportPDF = () => {
+    const columns = [
+      { header: "Date", dataKey: "date" },
+      { header: "Client", dataKey: "customer" },
+      { header: "Montant", dataKey: "amount" },
+      { header: "Payé", dataKey: "paid" },
+      { header: "Méthode", dataKey: "method" },
+      { header: "Statut", dataKey: "status" },
+    ];
+    
+    const data = filtered.map(s => ({
+      date: formatDateShort(s.sold_at),
+      customer: s.customers?.name || "Vente directe",
+      amount: formatCFA(s.total_amount),
+      paid: formatCFA(s.paid_amount),
+      method: formatPaymentMethod(s.payment_method),
+      status: formatPaymentStatus(s.payment_status),
+    }));
+
+    exportToPDF("Rapport des Ventes", columns, data, `ventes_fadima_${new Date().getTime()}`);
+  };
+
+  const handleExportExcel = () => {
+    const data = filtered.map(s => ({
+      "Date": formatDateShort(s.sold_at),
+      "Heure": new Date(s.sold_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+      "Client": s.customers?.name || "Vente directe",
+      "Téléphone": s.customers?.phone || "",
+      "Montant Total (FCFA)": s.total_amount,
+      "Montant Payé (FCFA)": s.paid_amount,
+      "Reste à payer (FCFA)": s.total_amount - s.paid_amount,
+      "Méthode": formatPaymentMethod(s.payment_method),
+      "Statut": formatPaymentStatus(s.payment_status),
+      "Notes": s.notes || "",
+    }));
+
+    exportToExcel(data, `ventes_fadima_${new Date().getTime()}`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
@@ -63,10 +104,28 @@ export default function SalesClient({ sales }: SalesClientProps) {
             {sales.length} vente{sales.length > 1 ? "s" : ""} enregistrée{sales.length > 1 ? "s" : ""}
           </p>
         </div>
-        <Link href="/sales/new" className="btn-primary">
-          <Plus className="w-5 h-5" />
-          Nouvelle vente
-        </Link>
+        <div className="flex items-center gap-2">
+          <div className="dropdown relative group">
+            <button className="btn-outline">
+              <Download className="w-5 h-5" />
+              <span className="hidden sm:inline">Exporter</span>
+            </button>
+            <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-elevated border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="p-2 flex flex-col gap-1">
+                <button onClick={handleExportPDF} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  Format PDF
+                </button>
+                <button onClick={handleExportExcel} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  Format Excel
+                </button>
+              </div>
+            </div>
+          </div>
+          <Link href="/sales/new" className="btn-primary">
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">Nouvelle vente</span>
+          </Link>
+        </div>
       </div>
 
       {/* KPI rapide */}

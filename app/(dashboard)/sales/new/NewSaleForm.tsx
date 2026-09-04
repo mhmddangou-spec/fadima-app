@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 declare global {
@@ -14,6 +14,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { formatCFA, generateSaleNumber, cn } from "@/lib/utils/format";
 import toast from "react-hot-toast";
+import { saveSaleOffline, isOnline } from "@/lib/offlineSync";
 
 interface Product {
   id: string;
@@ -110,6 +111,43 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
           .select("id")
           .single();
         finalCustomerId = newCustomer?.id;
+      }
+
+      if (paymentMethod === "mobile_money" && !isOnline()) {
+        toast.error("Le paiement par Mobile Money nécessite une connexion Internet.");
+        setLoading(false);
+        return;
+      }
+
+      if (!isOnline()) {
+        // Mode Hors-ligne
+        const saleData = {
+          user_id: userId,
+          customer_id: finalCustomerId,
+          sale_number: generateSaleNumber(),
+          total_amount: total,
+          paid_amount: actualPaidAmount,
+          discount_amount: 0,
+          payment_method: paymentMethod,
+          payment_status: paymentStatus,
+          notes,
+          sold_at: new Date(soldAt).toISOString(),
+        };
+
+        const itemsData = cart.map((item) => ({
+          user_id: userId,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          total_price: item.quantity * item.unit_price,
+        }));
+
+        await saveSaleOffline(saleData, itemsData);
+        toast.success("Hors-ligne : Vente enregistrée en attente de synchronisation ✓");
+        router.push("/sales");
+        router.refresh();
+        return;
       }
 
       // Créer la vente

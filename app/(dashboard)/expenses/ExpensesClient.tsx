@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Plus, CreditCard, Search, Loader2, ArrowLeft, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { formatCFA, formatRelative } from "@/lib/utils/format";
+import { formatCFA, formatRelative, formatDateShort } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/format";
 import toast from "react-hot-toast";
+import { exportToPDF, exportToExcel } from "@/lib/export";
+import { Download } from "lucide-react";
 
 const DEFAULT_CATEGORIES = [
   { name: "Transport", emoji: "🚗" },
@@ -74,6 +76,39 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
     e.description?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleExportPDF = () => {
+    const columns = [
+      { header: "Date", dataKey: "date" },
+      { header: "Catégorie", dataKey: "category" },
+      { header: "Description", dataKey: "description" },
+      { header: "Montant", dataKey: "amount" },
+      { header: "Méthode", dataKey: "method" },
+    ];
+    
+    const data = filtered.map(e => ({
+      date: formatDateShort(e.spent_at),
+      category: e.category_name || "Autre",
+      description: e.description || "",
+      amount: formatCFA(e.amount),
+      method: e.payment_method,
+    }));
+
+    exportToPDF("Rapport des Dépenses", columns, data, `depenses_fadima_${new Date().getTime()}`);
+  };
+
+  const handleExportExcel = () => {
+    const data = filtered.map(e => ({
+      "Date": formatDateShort(e.spent_at),
+      "Heure": new Date(e.spent_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+      "Catégorie": e.category_name || "Autre",
+      "Description": e.description || "",
+      "Montant (FCFA)": e.amount,
+      "Méthode de paiement": e.payment_method,
+    }));
+
+    exportToExcel(data, `depenses_fadima_${new Date().getTime()}`);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.category_name || !form.amount) {
@@ -112,10 +147,28 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
           <h1 className="text-2xl font-bold text-gray-900">Dépenses</h1>
           <p className="text-gray-500 text-sm">{expenses.length} dépense{expenses.length > 1 ? "s" : ""} enregistrée{expenses.length > 1 ? "s" : ""}</p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary">
-          <Plus className="w-5 h-5" />
-          Nouvelle dépense
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="dropdown relative group">
+            <button className="btn-outline">
+              <Download className="w-5 h-5" />
+              <span className="hidden sm:inline">Exporter</span>
+            </button>
+            <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-elevated border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="p-2 flex flex-col gap-1">
+                <button onClick={handleExportPDF} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  Format PDF
+                </button>
+                <button onClick={handleExportExcel} className="text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  Format Excel
+                </button>
+              </div>
+            </div>
+          </div>
+          <button onClick={() => setShowForm(true)} className="btn-primary">
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">Nouvelle dépense</span>
+          </button>
+        </div>
       </div>
 
       {/* KPIs */}
@@ -132,16 +185,16 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
 
       {/* Formulaire rapide */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowForm(false)}>
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-5 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4 sm:p-6 overflow-y-auto" onClick={() => setShowForm(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up flex flex-col max-h-[90vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-5 border-b border-gray-100 flex-shrink-0">
               <h2 className="text-lg font-bold text-gray-900">Nouvelle dépense</h2>
               <button onClick={() => setShowForm(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <form onSubmit={handleSubmit} className="p-5 space-y-4 overflow-y-auto">
               {/* Catégorie rapide */}
               <div>
                 <label className="input-label">Catégorie</label>

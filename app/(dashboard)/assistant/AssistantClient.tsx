@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useRef, useEffect, useState } from "react";
@@ -107,7 +107,7 @@ export default function AssistantClient({ context, userId }: AssistantClientProp
   };
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in">
+    <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-8rem)] animate-fade-in w-full">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 gradient-primary rounded-2xl flex items-center justify-center shadow-sm">

@@ -4,12 +4,13 @@ import { notFound } from "next/navigation";
 import PublicProfileClient from "./PublicProfileClient";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
   const supabase = await createClient();
   const { data: business } = await supabase
     .from("businesses")
     .select("name, description")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!business) {
@@ -22,7 +23,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function PublicProfilePage({ params }: { params: { id: string } }) {
+export default async function PublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
   
   // Requête publique vers le business
@@ -30,11 +32,18 @@ export default async function PublicProfilePage({ params }: { params: { id: stri
   const { data: business, error } = await supabase
     .from("businesses")
     .select("id, name, activity, city, phone, description, opening_hours, logo_url, is_public")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !business) {
-    return notFound();
+    console.error("Error fetching public profile:", error);
+    return (
+      <div className="p-10 text-red-500">
+        <h1>Erreur ou Profil introuvable</h1>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+        <p>Avez-vous bien cliqué sur Enregistrer pour passer is_public à true ?</p>
+      </div>
+    );
   }
 
   if (!business.is_public) {
