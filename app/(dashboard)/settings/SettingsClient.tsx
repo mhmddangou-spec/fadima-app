@@ -70,67 +70,11 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState<"profile" | "business" | null>(null);
 
-  const [profileForm, setProfileForm] = useState({
-    full_name: user.full_name || "",
-    phone: user.phone || "",
-    avatar_url: user.avatar_url || "",
-    bio: user.bio || "",
-  });
-
-  const [businessForm, setBusinessForm] = useState({
-    name: business?.name || "",
-    activity: business?.activity || "",
-    city: business?.city || "",
-    phone: business?.phone || "",
-  });
-
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
-  };
-
-  const handleSaveProfile = async () => {
-    setLoading(true);
-    try {
-      const supabase = createClient();
-      await supabase.auth.updateUser({
-        data: {
-          full_name: profileForm.full_name,
-          phone: profileForm.phone,
-          avatar_url: profileForm.avatar_url,
-          bio: profileForm.bio,
-        },
-      });
-      toast.success("Profil mis à jour ✓");
-      setActiveSection(null);
-    } catch {
-      toast.error("Erreur lors de la mise à jour.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSaveBusiness = async () => {
-    if (!business) return;
-    setLoading(true);
-    try {
-      const supabase = createClient();
-      await supabase.from("businesses").update({
-        name: businessForm.name,
-        activity: businessForm.activity,
-        city: businessForm.city,
-        phone: businessForm.phone,
-      }).eq("id", business.id);
-      toast.success("Business mis à jour ✓");
-      setActiveSection(null);
-      router.refresh();
-    } catch {
-      toast.error("Erreur lors de la mise à jour.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   const plan = business?.plan || "free";
@@ -166,54 +110,10 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
         </div>
       </div>
 
-      {/* Section Profil */}
+      {/* Raccourci vers Mon Profil */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <button
-          onClick={() => setActiveSection(activeSection === "profile" ? null : "profile")}
-          className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
-              <User className="w-5 h-5 text-blue-600" />
-            </div>
-            <span className="font-semibold text-gray-900">Mon profil</span>
-          </div>
-          <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${activeSection === "profile" ? "rotate-90" : ""}`} />
-        </button>
-
-        {activeSection === "profile" && (
-          <div className="px-5 pb-5 space-y-4 border-t border-gray-50">
-            <div>
-              <label className="input-label">URL Photo de profil (Optionnel)</label>
-              <input type="url" className="input" placeholder="https://..." value={profileForm.avatar_url} onChange={(e) => setProfileForm({ ...profileForm, avatar_url: e.target.value })} />
-            </div>
-            <div>
-              <label className="input-label">Nom complet</label>
-              <input type="text" className="input" value={profileForm.full_name} onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })} />
-            </div>
-            <div>
-              <label className="input-label">Téléphone</label>
-              <input type="tel" className="input" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} />
-            </div>
-            <div>
-              <label className="input-label">Biographie</label>
-              <textarea className="input min-h-[80px]" placeholder="Parlez-nous de vous..." value={profileForm.bio} onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })} />
-            </div>
-            <div>
-              <label className="input-label">Email</label>
-              <input type="email" className="input" value={user.email} disabled className="input bg-gray-50 text-gray-500 cursor-not-allowed" />
-            </div>
-            <button onClick={handleSaveProfile} disabled={loading} className="btn-primary w-full justify-center">
-              {loading ? <><Loader2 className="w-5 h-5 animate-spin" />Sauvegarde...</> : <><Check className="w-5 h-5" />Sauvegarder</>}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Section Business */}
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-        <button
-          onClick={() => setActiveSection(activeSection === "business" ? null : "business")}
+          onClick={() => router.push('/profile')}
           className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
         >
           <div className="flex items-center gap-3">
@@ -221,56 +121,12 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
               <Building2 className="w-5 h-5 text-primary-600" />
             </div>
             <div className="text-left">
-              <span className="font-semibold text-gray-900 block">{business?.name || "Mon Business"}</span>
-              <span className="text-xs text-gray-500">{business?.activity || ""}</span>
+              <span className="font-semibold text-gray-900 block">Profil Pro & Identité</span>
+              <span className="text-xs text-gray-500">Gérer mes informations professionnelles publiques</span>
             </div>
           </div>
-          <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${activeSection === "business" ? "rotate-90" : ""}`} />
+          <ChevronRight className="w-5 h-5 text-gray-400" />
         </button>
-
-        {activeSection === "business" && (
-          <div className="px-5 pb-5 space-y-4 border-t border-gray-50">
-            <div className="pt-4">
-              <label className="input-label">Nom du business</label>
-              <input type="text" className="input" value={businessForm.name} onChange={(e) => setBusinessForm({ ...businessForm, name: e.target.value })} />
-            </div>
-            <div>
-              <label className="input-label">Activité</label>
-              <select
-                className="input"
-                value={businessForm.activity}
-                onChange={(e) => setBusinessForm({ ...businessForm, activity: e.target.value })}
-              >
-                <option value="" disabled>Choisir une activité</option>
-                {BUSINESS_ACTIVITIES.map((act) => (
-                  <option key={act} value={act}>{act}</option>
-                ))}
-              </select>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="input-label">Ville</label>
-                <select
-                  className="input"
-                  value={businessForm.city}
-                  onChange={(e) => setBusinessForm({ ...businessForm, city: e.target.value })}
-                >
-                  <option value="" disabled>Choisir une ville</option>
-                  {CITIES_BENIN.map((city) => (
-                    <option key={city} value={city}>{city}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="input-label">Téléphone</label>
-                <input type="tel" className="input" value={businessForm.phone} onChange={(e) => setBusinessForm({ ...businessForm, phone: e.target.value })} />
-              </div>
-            </div>
-            <button onClick={handleSaveBusiness} disabled={loading} className="btn-primary w-full justify-center">
-              {loading ? <><Loader2 className="w-5 h-5 animate-spin" />Sauvegarde...</> : <><Check className="w-5 h-5" />Sauvegarder</>}
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Plan actuel */}

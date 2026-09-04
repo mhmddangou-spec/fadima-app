@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard, ShoppingBag, CreditCard, Users, Package,
   BarChart3, MessageSquare, Settings, TrendingUp, LogOut,
-  ChevronRight, AlertCircle, Zap, Bell,
+  ChevronRight, AlertCircle, Zap, Bell, Building2
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/format";
@@ -130,6 +130,16 @@ export default function Sidebar({ businessName, userName, userAvatar, plan = "fr
 
       {/* Bottom */}
       <div className="p-3 border-t border-gray-50 space-y-0.5">
+        <Link
+          href="/profile"
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+            pathname === "/profile" ? "bg-primary-600 text-white" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+          )}
+        >
+          <Building2 className="w-4.5 h-4.5 flex-shrink-0" style={{ width: "1.125rem", height: "1.125rem" }} />
+          Mon Profil
+        </Link>
         <Link
           href="/settings"
           className={cn(

@@ -19,6 +19,9 @@ export interface Business {
   currency: string;
   country: string;
   logo_url?: string;
+  description?: string;
+  opening_hours?: string;
+  is_public: boolean;
   plan: UserPlan;
   plan_expires_at?: string;
   created_at: string;

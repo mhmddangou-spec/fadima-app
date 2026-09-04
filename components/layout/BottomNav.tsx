@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, ShoppingBag, Plus, AlertCircle, MoreHorizontal, X,
-  CreditCard, Users, Package, BarChart3, Settings, MessageSquare,
+  CreditCard, Users, Package, BarChart3, Settings, MessageSquare, Building2
 } from "lucide-react";
 import { cn } from "@/lib/utils/format";
 import { useState } from "react";
@@ -17,6 +17,7 @@ const FAB_ACTIONS = [
 ];
 
 const MORE_ITEMS = [
+  { href: "/profile",    label: "Mon Profil",    icon: Building2 },
   { href: "/products",   label: "Produits",      icon: Package },
   { href: "/customers",  label: "Clients",       icon: Users },
   { href: "/analytics",  label: "Statistiques",  icon: BarChart3 },
