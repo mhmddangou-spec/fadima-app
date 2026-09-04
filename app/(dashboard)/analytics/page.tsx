@@ -11,7 +11,7 @@ export default async function AnalyticsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // RÃ©cupÃ©rer 30 jours de donnÃ©es par dÃ©faut
+  // Récupérer 30 jours de données par défaut
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
   thirtyDaysAgo.setHours(0, 0, 0, 0);
@@ -31,7 +31,7 @@ export default async function AnalyticsPage() {
       .gte("spent_at", thirtyDaysAgo.toISOString())
       .order("spent_at", { ascending: true }),
 
-    // Top produits : agrÃ©ger les sale_items
+    // Top produits : agréger les sale_items
     supabase
       .from("sale_items")
       .select("product_name, quantity, total_price")
@@ -39,7 +39,7 @@ export default async function AnalyticsPage() {
       .gte("created_at", thirtyDaysAgo.toISOString()),
   ]);
 
-  // AgrÃ©ger les top produits
+  // Agréger les top produits
   const productMap = new Map<string, { revenue: number; qty: number }>();
   for (const item of topProductsResult.data || []) {
     const existing = productMap.get(item.product_name) || { revenue: 0, qty: 0 };
@@ -53,7 +53,7 @@ export default async function AnalyticsPage() {
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 5);
 
-  // AgrÃ©ger par dÃ©pense catÃ©gorie
+  // Agréger par dépense catégorie
   const categoryMap = new Map<string, number>();
   for (const exp of expensesResult.data || []) {
     const cat = exp.category_name || "Autre";
@@ -63,7 +63,7 @@ export default async function AnalyticsPage() {
     .map(([name, total]) => ({ name, total }))
     .sort((a, b) => b.total - a.total);
 
-  // DonnÃ©es du graphique (30 jours)
+  // Données du graphique (30 jours)
   const chartData = [];
   for (let i = 29; i >= 0; i--) {
     const d = new Date();

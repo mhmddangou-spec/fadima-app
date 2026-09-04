@@ -71,10 +71,10 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
           phone: profileForm.phone,
         },
       });
-      toast.success("Profil mis Ã  jour âœ“");
+      toast.success("Profil mis à jour ✓");
       setActiveSection(null);
     } catch {
-      toast.error("Erreur lors de la mise Ã  jour.");
+      toast.error("Erreur lors de la mise à jour.");
     } finally {
       setLoading(false);
     }
@@ -91,11 +91,11 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
         city: businessForm.city,
         phone: businessForm.phone,
       }).eq("id", business.id);
-      toast.success("Business mis Ã  jour âœ“");
+      toast.success("Business mis à jour ✓");
       setActiveSection(null);
       router.refresh();
     } catch {
-      toast.error("Erreur lors de la mise Ã  jour.");
+      toast.error("Erreur lors de la mise à jour.");
     } finally {
       setLoading(false);
     }
@@ -108,8 +108,8 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
     <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">ParamÃ¨tres</h1>
-        <p className="text-gray-500 text-sm">GÃ©rez votre compte et votre business</p>
+        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
+        <p className="text-gray-500 text-sm">Gérez votre compte et votre business</p>
       </div>
 
       {/* Profil */}
@@ -152,7 +152,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
               <input type="text" className="input" value={profileForm.full_name} onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })} />
             </div>
             <div>
-              <label className="input-label">TÃ©lÃ©phone</label>
+              <label className="input-label">Téléphone</label>
               <input type="tel" className="input" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} />
             </div>
             <div>
@@ -191,7 +191,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
               <input type="text" className="input" value={businessForm.name} onChange={(e) => setBusinessForm({ ...businessForm, name: e.target.value })} />
             </div>
             <div>
-              <label className="input-label">ActivitÃ©</label>
+              <label className="input-label">Activité</label>
               <input type="text" className="input" value={businessForm.activity} onChange={(e) => setBusinessForm({ ...businessForm, activity: e.target.value })} />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -200,7 +200,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
                 <input type="text" className="input" value={businessForm.city} onChange={(e) => setBusinessForm({ ...businessForm, city: e.target.value })} />
               </div>
               <div>
-                <label className="input-label">TÃ©lÃ©phone</label>
+                <label className="input-label">Téléphone</label>
                 <input type="tel" className="input" value={businessForm.phone} onChange={(e) => setBusinessForm({ ...businessForm, phone: e.target.value })} />
               </div>
             </div>
@@ -216,11 +216,11 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
         <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span className="text-xl">ðŸš€</span>
+              <span className="text-xl">🚀</span>
             </div>
             <div>
               <h3 className="font-bold text-amber-900 mb-1">Passez au plan Pro</h3>
-              <p className="text-amber-700 text-sm mb-3">DÃ©bloquez les rapports avancÃ©s, l'export PDF et bien plus encore.</p>
+              <p className="text-amber-700 text-sm mb-3">Débloquez les rapports avancés, l'export PDF et bien plus encore.</p>
               <button className="bg-amber-500 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors">
                 Voir les offres â†’
               </button>
@@ -232,7 +232,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
       {/* Autres options */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-50">
         {[
-          { icon: Shield, label: "ConfidentialitÃ© & SÃ©curitÃ©", color: "bg-green-50 text-green-600" },
+          { icon: Shield, label: "Confidentialité & Sécurité", color: "bg-green-50 text-green-600" },
           { icon: Bell, label: "Notifications", color: "bg-purple-50 text-purple-600" },
           { icon: HelpCircle, label: "Aide & Support", color: "bg-blue-50 text-blue-600" },
         ].map((item) => (
@@ -248,17 +248,17 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
         ))}
       </div>
 
-      {/* DÃ©connexion */}
+      {/* Déconnexion */}
       <button
         onClick={handleLogout}
         className="w-full flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-700 font-semibold hover:bg-red-100 transition-colors"
       >
         <LogOut className="w-5 h-5" />
-        Se dÃ©connecter
+        Se déconnecter
       </button>
 
       <p className="text-center text-xs text-gray-400 pb-4">
-        FADIMA v1.0.0 â€” Fait avec â¤ï¸ pour les commerÃ§ants africains
+        FADIMA v1.0.0 — Fait avec â¤ï¸ pour les commerçants africains
       </p>
     </div>
   );

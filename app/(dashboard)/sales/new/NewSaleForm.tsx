@@ -71,7 +71,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
   const updateCartItem = (i: number, field: keyof CartItem, value: string | number) => {
     const updated = [...cart];
     if (field === "product_name") {
-      // Auto-remplir le prix si un produit connu est sÃ©lectionnÃ©
+      // Auto-remplir le prix si un produit connu est sélectionné
       const prod = products.find((p) => p.id === value || p.name === value);
       if (prod) {
         updated[i] = {
@@ -101,7 +101,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
       const supabase = createClient();
       const actualPaidAmount = paymentStatus === "paid" ? total : (paidAmount as number) || 0;
 
-      // CrÃ©er ou rÃ©cupÃ©rer le client
+      // Créer ou récupérer le client
       let finalCustomerId = customerId || undefined;
       if (!customerId && customerName) {
         const { data: newCustomer } = await supabase
@@ -112,7 +112,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
         finalCustomerId = newCustomer?.id;
       }
 
-      // CrÃ©er la vente
+      // Créer la vente
       const { data: sale, error: saleError } = await supabase
         .from("sales")
         .insert({
@@ -132,7 +132,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
 
       if (saleError) throw saleError;
 
-      // CrÃ©er les lignes de vente
+      // Créer les lignes de vente
       await supabase.from("sale_items").insert(
         cart.map((item) => ({
           sale_id: sale!.id,
@@ -145,7 +145,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
         }))
       );
 
-      // CrÃ©er une dette si paiement partiel, impayÃ©, ou en attente de mobile money
+      // Créer une dette si paiement partiel, impayé, ou en attente de mobile money
       if ((paymentStatus !== "paid" || paymentMethod === "mobile_money") && finalCustomerId) {
         const remainingAmount = total - actualPaidAmount;
         await supabase.from("debts").insert({
@@ -159,7 +159,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
           status: paymentMethod === "mobile_money" ? "unpaid" : (paymentStatus === "unpaid" ? "unpaid" : "partial"),
         });
 
-        // Mettre Ã  jour le total_debt du client
+        // Mettre à jour le total_debt du client
         await supabase.rpc("update_customer_debt" as never, {
           p_customer_id: finalCustomerId,
           p_amount: paymentMethod === "mobile_money" ? total : remainingAmount,
@@ -172,7 +172,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: actualPaidAmount, // On paie ce que l'utilisateur a dÃ©fini comme "paidAmount" ou "total"
+            amount: actualPaidAmount, // On paie ce que l'utilisateur a défini comme "paidAmount" ou "total"
             description: `Vente #${sale!.id.slice(0, 8)}`,
             saleId: sale!.id,
             customerName: customerName || customers.find((c) => c.id === customerId)?.name,
@@ -191,9 +191,9 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
             },
             onComplete: (resp: any) => {
               if (resp.reason === "FedaPay.Checkout.Canceled") {
-                toast.error("Paiement annulÃ©. La vente est enregistrÃ©e comme impayÃ©e.");
+                toast.error("Paiement annulé. La vente est enregistrée comme impayée.");
               } else {
-                toast.success("Paiement Mobile Money rÃ©ussi !");
+                toast.success("Paiement Mobile Money réussi !");
               }
               router.push("/sales");
               router.refresh();
@@ -202,11 +202,11 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
           widget.open();
           return; // Ne pas rediriger tout de suite, on attend le widget
         } else {
-          toast.error("Le widget de paiement n'a pas pu Ãªtre chargÃ©.");
+          toast.error("Le widget de paiement n'a pas pu être chargé.");
         }
       }
 
-      toast.success("Vente enregistrÃ©e âœ“");
+      toast.success("Vente enregistrée ✓");
       router.push("/sales");
       router.refresh();
     } catch (err: any) {
@@ -268,7 +268,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                   </datalist>
                 </div>
 
-                {/* SÃ©lection rapide produit */}
+                {/* Sélection rapide produit */}
                 {products.length > 0 && (
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {products.slice(0, 5).map((p) => (
@@ -284,10 +284,10 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                   </div>
                 )}
 
-                {/* QuantitÃ© + Prix */}
+                {/* Quantité + Prix */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="input-label text-xs">QuantitÃ©</label>
+                    <label className="input-label text-xs">Quantité</label>
                     <input
                       type="number"
                       className="input"
@@ -355,7 +355,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                       : "border-gray-200 text-gray-600 hover:border-gray-300"
                   )}
                 >
-                  {m === "cash" ? "ðŸ’µ EspÃ¨ces" : m === "mobile_money" ? "ðŸ“± Mobile Money" : "ðŸ”„ Autre"}
+                  {m === "cash" ? "ðŸ’µ Espèces" : m === "mobile_money" ? "ðŸ“± Mobile Money" : "ðŸ”„ Autre"}
                 </button>
               ))}
             </div>
@@ -379,20 +379,20 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                       : "border-gray-200 text-gray-600 hover:border-gray-300"
                   )}
                 >
-                  {s === "paid" ? "âœ… PayÃ©" : s === "partial" ? "âš¡ Partiel" : "ðŸ“‹ CrÃ©dit"}
+                  {s === "paid" ? "✅ Payé" : s === "partial" ? "⚡ Partiel" : "📋 Crédit"}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Montant payÃ© si partiel */}
+          {/* Montant payé si partiel */}
           {paymentStatus === "partial" && (
             <div>
-              <label className="input-label">Montant payÃ©</label>
+              <label className="input-label">Montant payé</label>
               <input
                 type="number"
                 className="input"
-                placeholder="Montant reÃ§u en FCFA"
+                placeholder="Montant reçu en FCFA"
                 min={0}
                 max={total}
                 value={paidAmount}
@@ -400,7 +400,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
               />
               {typeof paidAmount === "number" && paidAmount > 0 && (
                 <p className="text-sm text-red-600 mt-1 font-medium">
-                  Reste Ã  payer: {formatCFA(total - paidAmount)}
+                  Reste à payer: {formatCFA(total - paidAmount)}
                 </p>
               )}
             </div>
@@ -409,7 +409,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
 
         {/* Client + Date */}
         <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
-          <h2 className="font-bold text-gray-900">Informations complÃ©mentaires</h2>
+          <h2 className="font-bold text-gray-900">Informations complémentaires</h2>
 
           {/* Client */}
           <div>
@@ -426,7 +426,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
               >
                 <option value="">Client inconnu / Vente directe</option>
                 {customers.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name} {c.phone ? `â€” ${c.phone}` : ""}</option>
+                  <option key={c.id} value={c.id}>{c.name} {c.phone ? `— ${c.phone}` : ""}</option>
                 ))}
                 <option value="__new">+ Nouveau client</option>
               </select>
@@ -467,7 +467,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
             <textarea
               className="input resize-none"
               rows={2}
-              placeholder="Ex: Livraison Ã  domicile, remise accordÃ©e..."
+              placeholder="Ex: Livraison à domicile, remise accordée..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -483,7 +483,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
           {loading ? (
             <><Loader2 className="w-5 h-5 animate-spin" /> Enregistrement...</>
           ) : (
-            <><ShoppingBag className="w-5 h-5" /> Enregistrer la vente â€” {formatCFA(total)}</>
+            <><ShoppingBag className="w-5 h-5" /> Enregistrer la vente — {formatCFA(total)}</>
           )}
         </button>
       </form>

@@ -17,9 +17,9 @@ const DEFAULT_CATEGORIES = [
   { name: "Communication", emoji: "ðŸ“±" },
   { name: "Salaire", emoji: "ðŸ‘¤" },
   { name: "Nourriture", emoji: "ðŸ”" },
-  { name: "Ã‰lectricitÃ©", emoji: "ðŸ’¡" },
+  { name: "Électricité", emoji: "💡" },
   { name: "Internet", emoji: "ðŸŒ" },
-  { name: "Autre", emoji: "ðŸ“‹" },
+  { name: "Autre", emoji: "📋" },
 ];
 
 interface Expense {
@@ -77,7 +77,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.category_name || !form.amount) {
-      toast.error("Veuillez remplir la catÃ©gorie et le montant.");
+      toast.error("Veuillez remplir la catégorie et le montant.");
       return;
     }
     setLoading(true);
@@ -93,7 +93,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
       });
       if (error) throw error;
 
-      toast.success("DÃ©pense enregistrÃ©e âœ“");
+      toast.success("Dépense enregistrée ✓");
       setShowForm(false);
       setForm({ category_name: "", amount: "", description: "", payment_method: "cash", spent_at: new Date().toISOString().slice(0, 16) });
       router.refresh();
@@ -109,12 +109,12 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">DÃ©penses</h1>
-          <p className="text-gray-500 text-sm">{expenses.length} dÃ©pense{expenses.length > 1 ? "s" : ""} enregistrÃ©e{expenses.length > 1 ? "s" : ""}</p>
+          <h1 className="text-2xl font-bold text-gray-900">Dépenses</h1>
+          <p className="text-gray-500 text-sm">{expenses.length} dépense{expenses.length > 1 ? "s" : ""} enregistrée{expenses.length > 1 ? "s" : ""}</p>
         </div>
         <button onClick={() => setShowForm(true)} className="btn-primary">
           <Plus className="w-5 h-5" />
-          Nouvelle dÃ©pense
+          Nouvelle dépense
         </button>
       </div>
 
@@ -135,16 +135,16 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900">Nouvelle dÃ©pense</h2>
+              <h2 className="text-lg font-bold text-gray-900">Nouvelle dépense</h2>
               <button onClick={() => setShowForm(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              {/* CatÃ©gorie rapide */}
+              {/* Catégorie rapide */}
               <div>
-                <label className="input-label">CatÃ©gorie</label>
+                <label className="input-label">Catégorie</label>
                 <div className="grid grid-cols-3 gap-2 mb-3">
                   {DEFAULT_CATEGORIES.slice(0, 6).map((cat) => (
                     <button
@@ -168,7 +168,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
                   onChange={(e) => setForm({ ...form, category_name: e.target.value })}
                   required
                 >
-                  <option value="">Choisir une catÃ©gorie...</option>
+                  <option value="">Choisir une catégorie...</option>
                   {DEFAULT_CATEGORIES.map((c) => (
                     <option key={c.name} value={c.name}>{c.emoji} {c.name}</option>
                   ))}
@@ -195,7 +195,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
                 <input
                   type="text"
                   className="input"
-                  placeholder="Ex: Transport marchÃ© Dantokpa"
+                  placeholder="Ex: Transport marché Dantokpa"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
@@ -206,7 +206,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
                 <div>
                   <label className="input-label text-xs">Mode</label>
                   <select className="select" value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
-                    <option value="cash">ðŸ’µ EspÃ¨ces</option>
+                    <option value="cash">ðŸ’µ Espèces</option>
                     <option value="mobile_money">ðŸ“± Mobile Money</option>
                     <option value="other">ðŸ”„ Autre</option>
                   </select>
@@ -231,7 +231,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
         <input
           type="text"
           className="input pl-9 bg-white"
-          placeholder="Rechercher une dÃ©pense..."
+          placeholder="Rechercher une dépense..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -241,10 +241,10 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
           <div className="text-5xl mb-4">ðŸ’¸</div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">Aucune dÃ©pense</h3>
-          <p className="text-gray-500 text-sm mb-6">Enregistrez vos premiÃ¨res dÃ©penses pour suivre vos coÃ»ts.</p>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">Aucune dépense</h3>
+          <p className="text-gray-500 text-sm mb-6">Enregistrez vos premières dépenses pour suivre vos coûts.</p>
           <button onClick={() => setShowForm(true)} className="btn-primary inline-flex">
-            <Plus className="w-5 h-5" />Enregistrer une dÃ©pense
+            <Plus className="w-5 h-5" />Enregistrer une dépense
           </button>
         </div>
       ) : (

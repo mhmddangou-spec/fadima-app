@@ -89,7 +89,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         notes: newDebtForm.notes || undefined,
         status: "unpaid",
       });
-      toast.success("Dette enregistrÃ©e âœ“");
+      toast.success("Dette enregistrée ✓");
       setShowNewDebt(false);
       setNewDebtForm({ customer_name: "", customer_id: "", initial_amount: "", due_date: "", notes: "" });
       router.refresh();
@@ -118,7 +118,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         paid_at: new Date().toISOString(),
       });
 
-      // Mise Ã  jour manuelle (en cas oÃ¹ le trigger ne s'exÃ©cute pas cÃ´tÃ© client)
+      // Mise à jour manuelle (en cas oÃ¹ le trigger ne s'exécute pas côté client)
       const newRemaining = Math.max(0, debt.remaining_amount - amount);
       const newPaid = debt.paid_amount + amount;
       const newStatus = newRemaining <= 0 ? "paid" : newPaid > 0 ? "partial" : "unpaid";
@@ -129,7 +129,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         status: newStatus,
       }).eq("id", showPayment);
 
-      toast.success("Remboursement enregistrÃ© âœ“");
+      toast.success("Remboursement enregistré ✓");
       setShowPayment(null);
       setPaymentForm({ amount: "", payment_method: "cash" });
       router.refresh();
@@ -156,10 +156,10 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         </button>
       </div>
 
-      {/* Total dÃ» */}
+      {/* Total dû */}
       {totalUnpaid > 0 && (
         <div className="bg-red-600 rounded-2xl p-5 text-white">
-          <p className="text-red-100 text-sm font-medium">Total dÃ» par les clients</p>
+          <p className="text-red-100 text-sm font-medium">Total dû par les clients</p>
           <p className="text-3xl font-bold mt-1">{formatCFA(totalUnpaid)}</p>
           <p className="text-red-200 text-xs mt-1">
             {debts.filter((d) => d.status !== "paid").length} client(s) avec des dettes actives
@@ -191,7 +191,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               )}
             >
-              {f === "all" ? "Toutes" : f === "unpaid" ? "Ã€ payer" : f === "partial" ? "Partielles" : "PayÃ©es"}
+              {f === "all" ? "Toutes" : f === "unpaid" ? "À payer" : f === "partial" ? "Partielles" : "Payées"}
             </button>
           ))}
         </div>
@@ -200,9 +200,9 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
       {/* Liste des dettes */}
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
-          <div className="text-5xl mb-4">ðŸ“‹</div>
+          <div className="text-5xl mb-4">📋</div>
           <h3 className="text-lg font-bold text-gray-900 mb-2">Aucune dette</h3>
-          <p className="text-gray-500 text-sm mb-6">Aucune dette Ã  afficher pour le moment.</p>
+          <p className="text-gray-500 text-sm mb-6">Aucune dette à afficher pour le moment.</p>
           <button onClick={() => setShowNewDebt(true)} className="btn-primary inline-flex">
             <Plus className="w-5 h-5" />Nouvelle dette
           </button>
@@ -229,7 +229,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
                     <p className="font-semibold text-gray-900">{debt.customer_name}</p>
                     <p className="text-xs text-gray-500">
                       {formatDateShort(debt.created_at)}
-                      {debt.due_date && ` Â· Ã‰chÃ©ance: ${formatDateShort(debt.due_date)}`}
+                      {debt.due_date && ` Â· Échéance: ${formatDateShort(debt.due_date)}`}
                     </p>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
                   <p className="text-sm font-bold text-gray-900">{formatCFA(debt.initial_amount)}</p>
                 </div>
                 <div className="text-center p-2 bg-green-50 rounded-lg">
-                  <p className="text-xs text-green-600">PayÃ©</p>
+                  <p className="text-xs text-green-600">Payé</p>
                   <p className="text-sm font-bold text-green-700">{formatCFA(debt.paid_amount)}</p>
                 </div>
                 <div className="text-center p-2 bg-red-50 rounded-lg">
@@ -279,7 +279,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         </div>
       )}
 
-      {/* Modal â€” Nouvelle dette */}
+      {/* Modal — Nouvelle dette */}
       {showNewDebt && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowNewDebt(false)}>
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
@@ -305,12 +305,12 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
                   onChange={(e) => setNewDebtForm({ ...newDebtForm, customer_name: e.target.value })} required />
               </div>
               <div>
-                <label className="input-label">Montant dÃ» (FCFA)</label>
+                <label className="input-label">Montant dû (FCFA)</label>
                 <input type="number" className="input text-xl font-bold" placeholder="0" min={0} value={newDebtForm.initial_amount}
                   onChange={(e) => setNewDebtForm({ ...newDebtForm, initial_amount: e.target.value })} required />
               </div>
               <div>
-                <label className="input-label">Date d'Ã©chÃ©ance (facultatif)</label>
+                <label className="input-label">Date d'échéance (facultatif)</label>
                 <input type="date" className="input" value={newDebtForm.due_date} onChange={(e) => setNewDebtForm({ ...newDebtForm, due_date: e.target.value })} />
               </div>
               <div>
@@ -326,7 +326,7 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
         </div>
       )}
 
-      {/* Modal â€” Remboursement */}
+      {/* Modal — Remboursement */}
       {showPayment && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowPayment(null)}>
           <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
@@ -342,19 +342,19 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
                 return debt ? (
                   <div className="bg-red-50 rounded-xl p-3 text-sm">
                     <p className="text-red-800 font-medium">{debt.customer_name}</p>
-                    <p className="text-red-600">Reste Ã  payer: {formatCFA(debt.remaining_amount)}</p>
+                    <p className="text-red-600">Reste à payer: {formatCFA(debt.remaining_amount)}</p>
                   </div>
                 ) : null;
               })()}
               <div>
-                <label className="input-label">Montant reÃ§u (FCFA)</label>
+                <label className="input-label">Montant reçu (FCFA)</label>
                 <input type="number" className="input text-xl font-bold" placeholder="0" min={0}
                   value={paymentForm.amount} onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })} required />
               </div>
               <div>
                 <label className="input-label">Mode de paiement</label>
                 <select className="select" value={paymentForm.payment_method} onChange={(e) => setPaymentForm({ ...paymentForm, payment_method: e.target.value })}>
-                  <option value="cash">ðŸ’µ EspÃ¨ces</option>
+                  <option value="cash">ðŸ’µ Espèces</option>
                   <option value="mobile_money">ðŸ“± Mobile Money</option>
                   <option value="other">ðŸ”„ Autre</option>
                 </select>

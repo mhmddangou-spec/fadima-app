@@ -33,7 +33,7 @@ const SUGGESTIONS = [
 export default function AssistantClient({ context, userId }: AssistantClientProps) {
   const { messages, status, sendMessage, error } = useChat({
     api: "/api/chat",
-    body: { context }, // On passe le contexte Ã  chaque requÃªte
+    body: { context }, // On passe le contexte à chaque requête
     onError: (err) => {
       console.error("Chat error:", err);
     },
@@ -115,7 +115,7 @@ export default function AssistantClient({ context, userId }: AssistantClientProp
         </div>
         <div>
           <h1 className="text-xl font-bold text-gray-900">Assistant FADIMA</h1>
-          <p className="text-gray-500 text-xs">PropulsÃ© par Google Gemini</p>
+          <p className="text-gray-500 text-xs">Propulsé par Google Gemini</p>
         </div>
       </div>
 

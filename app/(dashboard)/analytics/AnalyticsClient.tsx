@@ -35,8 +35,8 @@ export default function AnalyticsClient({
 }: AnalyticsClientProps) {
   const kpis = [
     { label: "Chiffre d'affaires", value: totalSales, icon: TrendingUp, color: "text-primary-700 bg-primary-50" },
-    { label: "DÃ©penses totales", value: totalExpenses, icon: CreditCard, color: "text-red-700 bg-red-50" },
-    { label: "RÃ©sultat estimÃ©", value: profit, icon: TrendingUp, color: profit >= 0 ? "text-green-700 bg-green-50" : "text-red-700 bg-red-50" },
+    { label: "Dépenses totales", value: totalExpenses, icon: CreditCard, color: "text-red-700 bg-red-50" },
+    { label: "Résultat estimé", value: profit, icon: TrendingUp, color: profit >= 0 ? "text-green-700 bg-green-50" : "text-red-700 bg-red-50" },
     { label: "Panier moyen", value: avgBasket, icon: ShoppingBag, color: "text-blue-700 bg-blue-50" },
   ];
 
@@ -72,13 +72,13 @@ export default function AnalyticsClient({
         </div>
       </div>
 
-      {/* Graphique d'Ã©volution */}
+      {/* Graphique d'évolution */}
       <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <h2 className="text-base font-bold text-gray-900 mb-4">Ã‰volution sur 30 jours</h2>
+        <h2 className="text-base font-bold text-gray-900 mb-4">Évolution sur 30 jours</h2>
         <SalesChart data={chartData.slice(-14)} />
       </div>
 
-      {/* Top produits + DÃ©penses par catÃ©gorie */}
+      {/* Top produits + Dépenses par catégorie */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Top produits */}
         <div className="bg-white rounded-xl border border-gray-100 p-5">
@@ -87,7 +87,7 @@ export default function AnalyticsClient({
             Top produits
           </h2>
           {topProducts.length === 0 ? (
-            <p className="text-gray-400 text-sm text-center py-8">Aucune donnÃ©e</p>
+            <p className="text-gray-400 text-sm text-center py-8">Aucune donnée</p>
           ) : (
             <div className="space-y-3">
               {topProducts.map((p, i) => (
@@ -116,14 +116,14 @@ export default function AnalyticsClient({
           )}
         </div>
 
-        {/* DÃ©penses par catÃ©gorie */}
+        {/* Dépenses par catégorie */}
         <div className="bg-white rounded-xl border border-gray-100 p-5">
           <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-red-600" />
-            DÃ©penses par catÃ©gorie
+            Dépenses par catégorie
           </h2>
           {expensesByCategory.length === 0 ? (
-            <p className="text-gray-400 text-sm text-center py-8">Aucune dÃ©pense</p>
+            <p className="text-gray-400 text-sm text-center py-8">Aucune dépense</p>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={180}>

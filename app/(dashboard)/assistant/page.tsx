@@ -11,7 +11,7 @@ export default async function AssistantPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // PrÃ©-charger les statistiques pour le contexte de l'assistant
+  // Pré-charger les statistiques pour le contexte de l'assistant
   const today = new Date().toISOString().split("T")[0];
   const monthStart = new Date();
   monthStart.setDate(1);

@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
-  // RÃ©cupÃ©rer les donnÃ©es en parallÃ¨le
+  // Récupérer les données en parallèle
   const [salesResult, expensesResult, debtsResult, productsResult, businessResult] =
     await Promise.all([
       // Ventes d'aujourd'hui
@@ -36,7 +36,7 @@ export default async function DashboardPage() {
         .lte("sold_at", todayEnd.toISOString())
         .order("sold_at", { ascending: false }),
 
-      // DÃ©penses d'aujourd'hui
+      // Dépenses d'aujourd'hui
       supabase
         .from("expenses")
         .select("amount, spent_at, category_name, description")
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
   const todayProfit = todaySales - todayExpenses;
   const todaySalesCount = (salesResult.data || []).length;
 
-  // Construire les donnÃ©es du graphique (7 jours)
+  // Construire les données du graphique (7 jours)
   const chartData = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
@@ -110,7 +110,7 @@ export default async function DashboardPage() {
     chartData.push({ date: dayStr, ventes: daySales, depenses: dayExpenses });
   }
 
-  // ActivitÃ© rÃ©cente (mÃ©lange ventes + dÃ©penses triÃ©s par date)
+  // Activité récente (mélange ventes + dépenses triés par date)
   const recentActivity = [
     ...(salesResult.data || []).slice(0, 5).map((s) => ({
       type: "sale" as const,
@@ -122,13 +122,13 @@ export default async function DashboardPage() {
     ...(expensesResult.data || []).slice(0, 3).map((e) => ({
       type: "expense" as const,
       amount: e.amount,
-      label: e.category_name || "DÃ©pense",
+      label: e.category_name || "Dépense",
       date: e.spent_at,
       description: e.description,
     })),
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 8);
 
-  const userName = user.user_metadata?.full_name || user.email?.split("@")[0] || "lÃ ";
+  const userName = user.user_metadata?.full_name || user.email?.split("@")[0] || "là";
 
   return (
     <DashboardClient

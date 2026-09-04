@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Montant et ID de vente requis" }, { status: 400 });
     }
 
-    // 1. CrÃ©er la transaction chez FedaPay
+    // 1. Créer la transaction chez FedaPay
     const transactionRes = await fetch(`${FEDAPAY_API}/transactions`, {
       method: "POST",
       headers: {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         description: description || `Vente FADIMA`,
         amount: Math.round(amount),
-        currency: { iso: "XOF" }, // par dÃ©faut FCFA
+        currency: { iso: "XOF" }, // par défaut FCFA
         customer: {
           firstname: customerName || "Client",
           lastname: "Fadima",
@@ -48,17 +48,17 @@ export async function POST(req: Request) {
     if (!transactionRes.ok) {
       const errorText = await transactionRes.text();
       console.error("FedaPay Error:", errorText);
-      return NextResponse.json({ error: "Erreur lors de la crÃ©ation de la transaction" }, { status: 500 });
+      return NextResponse.json({ error: "Erreur lors de la création de la transaction" }, { status: 500 });
     }
 
     const transactionData = await transactionRes.json();
     const transactionId = transactionData["v1/transaction"]?.id || transactionData.v1_transaction?.id || transactionData.transaction?.id || transactionData.id;
 
     if (!transactionId) {
-       return NextResponse.json({ error: "ID de transaction non reÃ§u" }, { status: 500 });
+       return NextResponse.json({ error: "ID de transaction non reçu" }, { status: 500 });
     }
 
-    // 2. GÃ©nÃ©rer le token de paiement
+    // 2. Générer le token de paiement
     const tokenRes = await fetch(`${FEDAPAY_API}/transactions/${transactionId}/token`, {
       method: "POST",
       headers: {
@@ -68,13 +68,13 @@ export async function POST(req: Request) {
     });
 
     if (!tokenRes.ok) {
-      return NextResponse.json({ error: "Erreur lors de la gÃ©nÃ©ration du token" }, { status: 500 });
+      return NextResponse.json({ error: "Erreur lors de la génération du token" }, { status: 500 });
     }
 
     const tokenData = await tokenRes.json();
     const token = tokenData.token;
 
-    // 3. Mettre Ã  jour la vente dans Supabase avec le transaction_id (pending)
+    // 3. Mettre à jour la vente dans Supabase avec le transaction_id (pending)
     await supabase.from("sales")
       .update({ 
         payment_transaction_id: transactionId.toString(),

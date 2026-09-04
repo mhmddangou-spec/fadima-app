@@ -48,7 +48,7 @@ export default function ProductsClient({ products, categories, userId }: Product
     selling_price: "",
     stock_quantity: "",
     min_stock_alert: "5",
-    unit: "piÃ¨ce",
+    unit: "pièce",
     description: "",
   });
 
@@ -86,9 +86,9 @@ export default function ProductsClient({ products, categories, userId }: Product
         description: form.description || undefined,
         is_active: true,
       });
-      toast.success("Produit ajoutÃ© âœ“");
+      toast.success("Produit ajouté ✓");
       setShowForm(false);
-      setForm({ name: "", category_id: "", purchase_price: "", selling_price: "", stock_quantity: "", min_stock_alert: "5", unit: "piÃ¨ce", description: "" });
+      setForm({ name: "", category_id: "", purchase_price: "", selling_price: "", stock_quantity: "", min_stock_alert: "5", unit: "pièce", description: "" });
       router.refresh();
     } catch {
       toast.error("Erreur lors de l'ajout.");
@@ -120,7 +120,7 @@ export default function ProductsClient({ products, categories, userId }: Product
           <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0" />
           <div>
             <p className="font-semibold text-amber-800">
-              âš ï¸ {lowStockCount} produit{lowStockCount > 1 ? "s" : ""} presque Ã©puisÃ©{lowStockCount > 1 ? "s" : ""}
+              âš ï¸ {lowStockCount} produit{lowStockCount > 1 ? "s" : ""} presque épuisé{lowStockCount > 1 ? "s" : ""}
             </p>
             <p className="text-xs text-amber-600">Cliquez pour filtrer</p>
           </div>
@@ -147,7 +147,7 @@ export default function ProductsClient({ products, categories, userId }: Product
         <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
           <div className="text-5xl mb-4">ðŸ“¦</div>
           <h3 className="text-lg font-bold text-gray-900 mb-2">Aucun produit</h3>
-          <p className="text-gray-500 text-sm mb-6">Ajoutez vos produits pour gÃ©rer votre stock.</p>
+          <p className="text-gray-500 text-sm mb-6">Ajoutez vos produits pour gérer votre stock.</p>
           <button onClick={() => setShowForm(true)} className="btn-primary inline-flex">
             <Plus className="w-5 h-5" />Ajouter un produit
           </button>
@@ -230,7 +230,7 @@ export default function ProductsClient({ products, categories, userId }: Product
         </div>
       )}
 
-      {/* Modal â€” Nouveau produit */}
+      {/* Modal — Nouveau produit */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl animate-slide-up overflow-y-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
@@ -248,9 +248,9 @@ export default function ProductsClient({ products, categories, userId }: Product
 
               {categories.length > 0 && (
                 <div>
-                  <label className="input-label">CatÃ©gorie</label>
+                  <label className="input-label">Catégorie</label>
                   <select className="select" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
-                    <option value="">Sans catÃ©gorie</option>
+                    <option value="">Sans catégorie</option>
                     {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
@@ -269,7 +269,7 @@ export default function ProductsClient({ products, categories, userId }: Product
 
               {margin !== null && margin > 0 && (
                 <div className="bg-green-50 rounded-xl p-3 text-sm text-green-700">
-                  <span className="font-semibold">Marge estimÃ©e: {formatCFA(margin)}</span>
+                  <span className="font-semibold">Marge estimée: {formatCFA(margin)}</span>
                   {form.purchase_price && <span className="text-green-600 ml-2">({Math.round((margin / parseFloat(form.purchase_price)) * 100)}%)</span>}
                 </div>
               )}
@@ -286,9 +286,9 @@ export default function ProductsClient({ products, categories, userId }: Product
               </div>
 
               <div>
-                <label className="input-label">UnitÃ©</label>
+                <label className="input-label">Unité</label>
                 <select className="select" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
-                  {["piÃ¨ce", "kg", "litre", "mÃ¨tre", "paquet", "boÃ®te", "sac", "carton"].map((u) => (
+                  {["pièce", "kg", "litre", "mètre", "paquet", "boîte", "sac", "carton"].map((u) => (
                     <option key={u} value={u}>{u}</option>
                   ))}
                 </select>

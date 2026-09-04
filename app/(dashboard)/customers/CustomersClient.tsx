@@ -52,7 +52,7 @@ export default function CustomersClient({ customers, userId }: CustomersClientPr
         email: form.email || undefined,
         city: form.city || undefined,
       });
-      toast.success("Client ajoutÃ© âœ“");
+      toast.success("Client ajouté ✓");
       setShowForm(false);
       setForm({ name: "", phone: "", email: "", city: "" });
       router.refresh();
@@ -133,7 +133,7 @@ export default function CustomersClient({ customers, userId }: CustomersClientPr
 
               {customer.last_transaction_at && (
                 <p className="text-xs text-gray-400 mt-2 pl-14">
-                  DerniÃ¨re transaction: {formatDateShort(customer.last_transaction_at)}
+                  Dernière transaction: {formatDateShort(customer.last_transaction_at)}
                 </p>
               )}
             </div>
@@ -141,7 +141,7 @@ export default function CustomersClient({ customers, userId }: CustomersClientPr
         </div>
       )}
 
-      {/* Modal â€” Nouveau client */}
+      {/* Modal — Nouveau client */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
@@ -155,7 +155,7 @@ export default function CustomersClient({ customers, userId }: CustomersClientPr
                 <input type="text" className="input" placeholder="Ex: Amina Diallo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div>
-                <label className="input-label">TÃ©lÃ©phone</label>
+                <label className="input-label">Téléphone</label>
                 <input type="tel" className="input" placeholder="+229 97 00 00 00" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-3">
