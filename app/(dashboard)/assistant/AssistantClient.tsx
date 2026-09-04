@@ -41,7 +41,7 @@ export default function AssistantClient({ context, userId }: AssistantClientProp
       {
         id: "welcome",
         role: "assistant",
-        content: `Bonjour ! ðŸ‘‹ Je suis votre assistant FADIMA.\n\nAujourd'hui, vos ventes sont de **${formatCFA(
+        content: `Bonjour ! 👋 Je suis votre assistant FADIMA.\n\nAujourd'hui, vos ventes sont de **${formatCFA(
           context.todaySales
         )}**. Comment puis-je vous aider ?`,
       },

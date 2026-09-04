@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils/format";
 import toast from "react-hot-toast";
 
 const DEFAULT_CATEGORIES = [
-  { name: "Transport", emoji: "ðŸš—" },
-  { name: "Achat marchandises", emoji: "ðŸ“¦" },
+  { name: "Transport", emoji: "🚗" },
+  { name: "Achat marchandises", emoji: "📦" },
   { name: "Loyer", emoji: "ðŸ " },
-  { name: "Communication", emoji: "ðŸ“±" },
-  { name: "Salaire", emoji: "ðŸ‘¤" },
+  { name: "Communication", emoji: "📱" },
+  { name: "Salaire", emoji: "👤" },
   { name: "Nourriture", emoji: "ðŸ”" },
   { name: "Électricité", emoji: "💡" },
   { name: "Internet", emoji: "ðŸŒ" },
@@ -206,9 +206,9 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
                 <div>
                   <label className="input-label text-xs">Mode</label>
                   <select className="select" value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
-                    <option value="cash">ðŸ’µ Espèces</option>
-                    <option value="mobile_money">ðŸ“± Mobile Money</option>
-                    <option value="other">ðŸ”„ Autre</option>
+                    <option value="cash">💵 Espèces</option>
+                    <option value="mobile_money">📱 Mobile Money</option>
+                    <option value="other">🔄 Autre</option>
                   </select>
                 </div>
                 <div>
@@ -240,7 +240,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
       {/* Liste */}
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
-          <div className="text-5xl mb-4">ðŸ’¸</div>
+          <div className="text-5xl mb-4">💸</div>
           <h3 className="text-lg font-bold text-gray-900 mb-2">Aucune dépense</h3>
           <p className="text-gray-500 text-sm mb-6">Enregistrez vos premières dépenses pour suivre vos coûts.</p>
           <button onClick={() => setShowForm(true)} className="btn-primary inline-flex">
@@ -255,7 +255,7 @@ export default function ExpensesClient({ expenses, categories, userId }: Expense
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">
-                      {DEFAULT_CATEGORIES.find((c) => c.name === expense.category_name)?.emoji || "ðŸ’¸"}
+                      {DEFAULT_CATEGORIES.find((c) => c.name === expense.category_name)?.emoji || "💸"}
                     </span>
                   </div>
                   <div className="min-w-0">

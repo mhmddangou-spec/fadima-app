@@ -222,7 +222,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
               <h3 className="font-bold text-amber-900 mb-1">Passez au plan Pro</h3>
               <p className="text-amber-700 text-sm mb-3">Débloquez les rapports avancés, l'export PDF et bien plus encore.</p>
               <button className="bg-amber-500 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors">
-                Voir les offres â†’
+                Voir les offres →
               </button>
             </div>
           </div>

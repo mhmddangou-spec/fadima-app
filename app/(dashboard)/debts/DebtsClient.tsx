@@ -354,9 +354,9 @@ export default function DebtsClient({ debts, customers, userId }: DebtsClientPro
               <div>
                 <label className="input-label">Mode de paiement</label>
                 <select className="select" value={paymentForm.payment_method} onChange={(e) => setPaymentForm({ ...paymentForm, payment_method: e.target.value })}>
-                  <option value="cash">ðŸ’µ Espèces</option>
-                  <option value="mobile_money">ðŸ“± Mobile Money</option>
-                  <option value="other">ðŸ”„ Autre</option>
+                  <option value="cash">💵 Espèces</option>
+                  <option value="mobile_money">📱 Mobile Money</option>
+                  <option value="other">🔄 Autre</option>
                 </select>
               </div>
               <button type="submit" disabled={loading} className="btn-primary w-full justify-center">

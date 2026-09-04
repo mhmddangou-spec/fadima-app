@@ -355,7 +355,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                       : "border-gray-200 text-gray-600 hover:border-gray-300"
                   )}
                 >
-                  {m === "cash" ? "ðŸ’µ Espèces" : m === "mobile_money" ? "ðŸ“± Mobile Money" : "ðŸ”„ Autre"}
+                  {m === "cash" ? "💵 Espèces" : m === "mobile_money" ? "📱 Mobile Money" : "🔄 Autre"}
                 </button>
               ))}
             </div>
