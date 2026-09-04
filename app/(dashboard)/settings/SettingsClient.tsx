@@ -258,7 +258,7 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
       </button>
 
       <p className="text-center text-xs text-gray-400 pb-4">
-        FADIMA v1.0.0 — Fait avec â¤ï¸ pour les commerçants africains
+        FADIMA v1.0.0 — Fait avec ❤️ pour les commerçants africains
       </p>
     </div>
   );
