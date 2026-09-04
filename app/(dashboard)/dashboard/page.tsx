@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
@@ -30,7 +30,7 @@ export default async function DashboardPage() {
       // Ventes d'aujourd'hui
       supabase
         .from("sales")
-        .select("total_amount, sold_at, payment_method, payment_status, customers(name)")
+        .select("id, total_amount, sold_at, payment_method, payment_status, customers(name)")
         .eq("user_id", user.id)
         .gte("sold_at", todayStart.toISOString())
         .lte("sold_at", todayEnd.toISOString())
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
       // Dépenses d'aujourd'hui
       supabase
         .from("expenses")
-        .select("amount, spent_at, category_name, description")
+        .select("id, amount, spent_at, category_name, description")
         .eq("user_id", user.id)
         .gte("spent_at", todayStart.toISOString())
         .lte("spent_at", todayEnd.toISOString())
@@ -113,13 +113,17 @@ export default async function DashboardPage() {
   // Activité récente (mélange ventes + dépenses triés par date)
   const recentActivity = [
     ...(salesResult.data || []).slice(0, 5).map((s) => ({
+      id: s.id,
       type: "sale" as const,
       amount: s.total_amount,
       label: "Vente",
       date: s.sold_at,
       method: s.payment_method,
+      status: s.payment_status,
+      customer_name: (s.customers as any)?.name,
     })),
     ...(expensesResult.data || []).slice(0, 3).map((e) => ({
+      id: e.id,
       type: "expense" as const,
       amount: e.amount,
       label: e.category_name || "Dépense",

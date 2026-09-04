@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ShoppingBag,
@@ -12,6 +13,10 @@ import {
   Users,
   ArrowRight,
   ChevronRight,
+  X,
+  Calendar,
+  Tag,
+  FileText
 } from "lucide-react";
 import StatCard from "@/components/ui/StatCard";
 import SalesChart from "@/components/charts/SalesChart";
@@ -20,11 +25,14 @@ import { cn } from "@/lib/utils/format";
 import { ChartDataPoint } from "@/types";
 
 interface Activity {
+  id: string;
   type: "sale" | "expense";
   amount: number;
   label: string;
   date: string;
   method?: string;
+  status?: string;
+  customer_name?: string;
   description?: string;
 }
 
@@ -68,6 +76,7 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Bonjour" : hour < 18 ? "Bon après-midi" : "Bonsoir";
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
@@ -217,9 +226,10 @@ export default function DashboardClient({
           ) : (
             <div className="space-y-3">
               {recentActivity.map((item, i) => (
-                <div
+                <button
                   key={i}
-                  className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                  onClick={() => setSelectedActivity(item)}
+                  className="w-full text-left flex items-center justify-between py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors px-2 rounded-lg cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div
@@ -247,7 +257,7 @@ export default function DashboardClient({
                   >
                     {item.type === "sale" ? "+" : "-"}{formatCFA(item.amount)}
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -263,6 +273,100 @@ export default function DashboardClient({
           <Plus className="w-7 h-7 text-white" />
         </Link>
       </div>
+
+      {/* Activity Details Modal */}
+      {selectedActivity && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-slide-up">
+            <div className="flex items-center justify-between p-5 border-b border-gray-100">
+              <h3 className="font-bold text-gray-900 text-lg">
+                Détails de la {selectedActivity.type === "sale" ? "Vente" : "Dépense"}
+              </h3>
+              <button
+                onClick={() => setSelectedActivity(null)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-5 space-y-4">
+              <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl">
+                <span className="text-gray-500 text-sm">Montant Total</span>
+                <span className={cn(
+                  "text-xl font-bold",
+                  selectedActivity.type === "sale" ? "text-primary-600" : "text-red-600"
+                )}>
+                  {selectedActivity.type === "sale" ? "+" : "-"}{formatCFA(selectedActivity.amount)}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <Calendar className="w-4 h-4 text-gray-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Date</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {new Date(selectedActivity.date).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <Tag className="w-4 h-4 text-gray-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">
+                      {selectedActivity.type === "sale" ? "Méthode de paiement" : "Catégorie"}
+                    </p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {selectedActivity.type === "sale" 
+                        ? formatPaymentMethod(selectedActivity.method || "") 
+                        : selectedActivity.label}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedActivity.type === "sale" && selectedActivity.customer_name && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                      <Users className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Client</p>
+                      <p className="text-sm font-medium text-gray-900">{selectedActivity.customer_name}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedActivity.type === "expense" && selectedActivity.description && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-4 h-4 text-gray-500" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Description</p>
+                      <p className="text-sm font-medium text-gray-900">{selectedActivity.description}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="p-5 border-t border-gray-100 bg-gray-50">
+              <button
+                onClick={() => setSelectedActivity(null)}
+                className="w-full btn-secondary py-2.5"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

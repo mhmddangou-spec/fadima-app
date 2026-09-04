@@ -34,9 +34,10 @@ const navItems = [
 interface SidebarProps {
   businessName?: string;
   userName?: string;
+  userAvatar?: string;
 }
 
-export default function Sidebar({ businessName, userName }: SidebarProps) {
+export default function Sidebar({ businessName, userName, userAvatar }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -70,8 +71,12 @@ export default function Sidebar({ businessName, userName }: SidebarProps) {
       {businessName && (
         <div className="px-4 py-3 mx-3 mt-3 bg-primary-50 rounded-xl">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs font-bold">{initials}</span>
+            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+              {userAvatar ? (
+                <img src={userAvatar} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-white text-xs font-bold">{initials}</span>
+              )}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">{businessName}</p>

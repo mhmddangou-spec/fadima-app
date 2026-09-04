@@ -26,12 +26,13 @@ export default async function DashboardLayout({
     .single()) as { data: any };
 
   const userName = user.user_metadata?.full_name || user.email || "";
+  const userAvatar = user.user_metadata?.avatar_url || "";
   const businessName = business?.name || "Mon Commerce";
 
   return (
     <div className="flex min-h-screen">
       {/* Sidebar desktop */}
-      <Sidebar businessName={businessName} userName={userName} />
+      <Sidebar businessName={businessName} userName={userName} userAvatar={userAvatar} />
 
       {/* Contenu principal */}
       <main className="dashboard-content flex-1">

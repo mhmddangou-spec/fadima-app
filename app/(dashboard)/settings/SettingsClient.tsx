@@ -15,6 +15,8 @@ interface UserProfile {
   email: string;
   full_name: string;
   phone: string;
+  avatar_url?: string;
+  bio?: string;
 }
 
 interface Business {
@@ -69,8 +71,10 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
   const [activeSection, setActiveSection] = useState<"profile" | "business" | null>(null);
 
   const [profileForm, setProfileForm] = useState({
-    full_name: user.full_name,
-    phone: user.phone,
+    full_name: user.full_name || "",
+    phone: user.phone || "",
+    avatar_url: user.avatar_url || "",
+    bio: user.bio || "",
   });
 
   const [businessForm, setBusinessForm] = useState({
@@ -95,6 +99,8 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
         data: {
           full_name: profileForm.full_name,
           phone: profileForm.phone,
+          avatar_url: profileForm.avatar_url,
+          bio: profileForm.bio,
         },
       });
       toast.success("Profil mis à jour ✓");
@@ -141,11 +147,15 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
       {/* Profil */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <div className="p-5 flex items-center gap-4">
-          <div className="w-14 h-14 gradient-primary rounded-2xl flex items-center justify-center">
-            <span className="text-white text-xl font-bold">
-              {user.full_name ? user.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
-            </span>
-          </div>
+          {user.avatar_url ? (
+            <img src={user.avatar_url} alt="Avatar" className="w-14 h-14 rounded-2xl object-cover border border-gray-100 shadow-sm" />
+          ) : (
+            <div className="w-14 h-14 gradient-primary rounded-2xl flex items-center justify-center shadow-sm">
+              <span className="text-white text-xl font-bold">
+                {user.full_name ? user.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "?"}
+              </span>
+            </div>
+          )}
           <div>
             <p className="font-bold text-gray-900 text-lg">{user.full_name || "Utilisateur"}</p>
             <p className="text-gray-500 text-sm">{user.email}</p>
@@ -173,13 +183,21 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
 
         {activeSection === "profile" && (
           <div className="px-5 pb-5 space-y-4 border-t border-gray-50">
-            <div className="pt-4">
+            <div>
+              <label className="input-label">URL Photo de profil (Optionnel)</label>
+              <input type="url" className="input" placeholder="https://..." value={profileForm.avatar_url} onChange={(e) => setProfileForm({ ...profileForm, avatar_url: e.target.value })} />
+            </div>
+            <div>
               <label className="input-label">Nom complet</label>
               <input type="text" className="input" value={profileForm.full_name} onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })} />
             </div>
             <div>
               <label className="input-label">Téléphone</label>
               <input type="tel" className="input" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} />
+            </div>
+            <div>
+              <label className="input-label">Biographie</label>
+              <textarea className="input min-h-[80px]" placeholder="Parlez-nous de vous..." value={profileForm.bio} onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })} />
             </div>
             <div>
               <label className="input-label">Email</label>

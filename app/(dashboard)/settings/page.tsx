@@ -23,6 +23,8 @@ export default async function SettingsPage() {
         email: user.email || "",
         full_name: user.user_metadata?.full_name || "",
         phone: user.user_metadata?.phone || "",
+        avatar_url: user.user_metadata?.avatar_url || "",
+        bio: user.user_metadata?.bio || "",
       }}
       business={business || null}
     />
