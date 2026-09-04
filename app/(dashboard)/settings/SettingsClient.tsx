@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -30,6 +30,32 @@ interface SettingsClientProps {
   user: UserProfile;
   business: Business | null;
 }
+
+const BUSINESS_ACTIVITIES = [
+  "Restauration / Alimentation",
+  "Coiffure / Beauté",
+  "Couture / Mode",
+  "Boutique générale",
+  "Téléphonie / Informatique",
+  "Freelance / Services",
+  "Agriculture / Maraîchage",
+  "Artisanat",
+  "Autre",
+];
+
+const CITIES_BENIN = [
+  "Cotonou",
+  "Porto-Novo",
+  "Parakou",
+  "Abomey-Calavi",
+  "Bohicon",
+  "Natitingou",
+  "Ouidah",
+  "Lokossa",
+  "Kandi",
+  "Djougou",
+  "Autre",
+];
 
 const PLAN_LABELS: Record<string, { label: string; color: string }> = {
   free: { label: "Gratuit", color: "bg-gray-100 text-gray-700" },
@@ -192,12 +218,30 @@ export default function SettingsClient({ user, business }: SettingsClientProps) 
             </div>
             <div>
               <label className="input-label">Activité</label>
-              <input type="text" className="input" value={businessForm.activity} onChange={(e) => setBusinessForm({ ...businessForm, activity: e.target.value })} />
+              <select
+                className="input"
+                value={businessForm.activity}
+                onChange={(e) => setBusinessForm({ ...businessForm, activity: e.target.value })}
+              >
+                <option value="" disabled>Choisir une activité</option>
+                {BUSINESS_ACTIVITIES.map((act) => (
+                  <option key={act} value={act}>{act}</option>
+                ))}
+              </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="input-label">Ville</label>
-                <input type="text" className="input" value={businessForm.city} onChange={(e) => setBusinessForm({ ...businessForm, city: e.target.value })} />
+                <select
+                  className="input"
+                  value={businessForm.city}
+                  onChange={(e) => setBusinessForm({ ...businessForm, city: e.target.value })}
+                >
+                  <option value="" disabled>Choisir une ville</option>
+                  {CITIES_BENIN.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="input-label">Téléphone</label>
