@@ -74,6 +74,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={inter.variable} data-scroll-behavior="smooth">
       <head>
+        <meta charSet="utf-8" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
