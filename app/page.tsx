@@ -598,7 +598,7 @@ export default function HomePage() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm">© 2024 FADIMA. Tous droits réservés.</p>
+            <p className="text-sm">© {new Date().getFullYear()} FADIMA. Tous droits réservés.</p>
             <p className="text-sm flex items-center gap-1">
               Fait avec <span className="text-red-400">❤️</span> pour l'Afrique
             </p>

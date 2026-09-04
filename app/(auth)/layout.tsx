@@ -32,7 +32,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <footer className="p-4 text-center text-xs text-gray-400">
-        © 2024 FADIMA — Ton business. Ta voix. Tes chiffres.
+        © {new Date().getFullYear()} FADIMA — Ton business. Ta voix. Tes chiffres.
       </footer>
     </div>
   );
