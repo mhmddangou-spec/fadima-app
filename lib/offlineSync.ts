@@ -41,11 +41,11 @@ export async function syncPendingSales(): Promise<number> {
     const pending = queue[i];
     try {
       // 1. Inserer la vente
-      const { data: saleRes, error: saleErr } = await supabase
+      const { data: saleRes, error: saleErr } = (await supabase
         .from("sales")
         .insert(pending.saleData)
         .select()
-        .single();
+        .single()) as { data: any; error: any };
       
       if (saleErr) throw saleErr;
 
@@ -58,7 +58,7 @@ export async function syncPendingSales(): Promise<number> {
 
         const { error: itemsErr } = await supabase
           .from("sale_items")
-          .insert(itemsToInsert);
+          .insert(itemsToInsert as any);
 
         if (itemsErr) throw itemsErr;
       }

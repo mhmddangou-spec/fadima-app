@@ -58,6 +58,7 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
     return now.toISOString().slice(0, 16);
   });
   const [notes, setNotes] = useState("");
+  const [focusedProductIndex, setFocusedProductIndex] = useState<number | null>(null);
 
   const total = cart.reduce((sum, item) => sum + item.quantity * item.unit_price, 0);
 
@@ -288,22 +289,40 @@ export default function NewSaleForm({ products, customers, userId }: NewSalePage
                   )}
                 </div>
 
-                {/* Nom du produit */}
-                <div>
+                {/* Nom du produit avec Autocomplete personnalisé */}
+                <div className="relative">
                   <input
                     type="text"
                     className="input"
                     placeholder="Nom du produit (ex: Chaussures)"
                     value={item.product_name}
                     onChange={(e) => updateCartItem(i, "product_name", e.target.value)}
-                    list={`products-list-${i}`}
+                    onFocus={() => setFocusedProductIndex(i)}
+                    onBlur={() => setTimeout(() => setFocusedProductIndex(null), 200)}
                     required
                   />
-                  <datalist id={`products-list-${i}`}>
-                    {products.map((p) => (
-                      <option key={p.id} value={p.name} />
-                    ))}
-                  </datalist>
+                  {focusedProductIndex === i && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                      {products
+                        .filter(p => p.name.toLowerCase().includes(item.product_name.toLowerCase()))
+                        .map(p => (
+                          <div
+                            key={p.id}
+                            className="p-3 hover:bg-gray-50 cursor-pointer text-sm border-b border-gray-50 last:border-0"
+                            onClick={() => {
+                              updateCartItem(i, "product_name", p.name);
+                              setFocusedProductIndex(null);
+                            }}
+                          >
+                            <div className="font-medium text-gray-900">{p.name}</div>
+                            <div className="text-xs text-gray-500">{formatCFA(p.selling_price)} - Stock: {p.stock_quantity}</div>
+                          </div>
+                      ))}
+                      {products.filter(p => p.name.toLowerCase().includes(item.product_name.toLowerCase())).length === 0 && (
+                        <div className="p-3 text-sm text-gray-500 text-center">Aucun produit trouvé</div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Sélection rapide produit */}
