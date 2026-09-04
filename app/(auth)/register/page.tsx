@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -147,7 +147,7 @@ export default function RegisterPage() {
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            {step === 1 ? "Créer votre compte 🚀" : "Votre business ðŸª"}
+            {step === 1 ? "Créer votre compte 🚀" : "Votre business 🏪"}
           </h1>
           <p className="text-gray-500 text-sm">
             {step === 1 ? "Étape 1 sur 2 — Informations personnelles" : "Étape 2 sur 2 — Votre activité"}
